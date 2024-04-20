@@ -12,20 +12,17 @@ public class ConsultaPelicula {
     public Pelicula buscaPelicula(int numeroDePelicula){
         URI direccion = URI.create("https://swapi.dev/api/films/"+ numeroDePelicula);
 
-
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(direccion)
                 .build();
 
-        HttpResponse<String> response = null;
         try {
-            response = client
+            HttpResponse<String> response = client
                     .send(request, BodyHandlers.ofString());
-        } catch (IOException| InterruptedException e) {
-            throw new RuntimeException(e);
+            return new Gson().fromJson(response.body(), Pelicula.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Pelicula no encontrada.");
         }
-        return new Gson().fromJson(response.body(), Pelicula.class);
-
     }
 }
